@@ -1,0 +1,13 @@
+onPlayerClick = (playerId) => {
+  let { camPos, dir } = api.getPlayerFacingInfo(playerId) || {}
+  if (!camPos) return
+  for (let i = 0; i <= 6; i++) {
+    let x = Math.floor(camPos[0] + dir[0] * i)
+    let y = Math.floor(camPos[1] + dir[1] * i)
+    let z = Math.floor(camPos[2] + dir[2] * i)
+    if (api.getBlock([x, y, z]).startsWith("Bookshelf")) {
+      api.setPosition(playerId, 2873, 29, -982)
+      return
+    }
+  }
+}

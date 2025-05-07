@@ -1,0 +1,7 @@
+onPlayerClick = (pid, x, y, z, face, itemName) => {
+  const held = api.getHeldItem(pid)
+  if (!held) return
+  if (held.name !== "Iron Fragment") return
+
+  api.setVelocity(pid, 0, 10, 0)
+}

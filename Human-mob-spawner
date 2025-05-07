@@ -1,0 +1,51 @@
+let tickCounter = 0
+let playerSpawnIndex = 0
+let mobTypes = ["Pig", "Cow", "Sheep", "Cave Golem", "Draugr Zombie", "Draugr Skeleton", "Draugr Skeleton", "Draugr Knight"]
+
+tick = () => {
+  tickCounter++
+  if (tickCounter < 20) return
+  tickCounter = 0
+
+  let players = api.getPlayerIds()
+  if (players.length === 0) return
+
+  let playerId = players[playerSpawnIndex % players.length]
+  playerSpawnIndex++
+
+  spawnMobNearPlayer(playerId)
+}
+
+function spawnMobNearPlayer(playerId) {
+  let [px, py, pz] = api.getPosition(playerId)
+
+  for (let attempt = 0; attempt < 10; attempt++) {
+    let dx = Math.floor(Math.random() * 6) + 5
+    let dz = Math.floor(Math.random() * 6) + 5
+    if (Math.random() < 0.5) dx *= -1
+    if (Math.random() < 0.5) dz *= -1
+
+    let x = Math.floor(px + dx)
+    let z = Math.floor(pz + dz)
+    let y = Math.floor(py)
+
+    for (let offsetY = -2; offsetY <= 2; offsetY++) {
+      let tryY = y + offsetY
+      let below = api.getBlock(x, tryY - 1, z)
+      let space1 = api.getBlock(x, tryY, z)
+      let space2 = api.getBlock(x, tryY + 1, z)
+
+      if (below !== "Air" && space1 === "Air" && space2 === "Air") {
+        let mob = mobTypes[Math.floor(Math.random() * mobTypes.length)]
+        let herd = api.createMobHerd()
+
+        api.attemptSpawnMob(mob, x, tryY, z, {
+          mobHerdId: herd,
+          spawnerId: playerId,
+          playSoundOnSpawn: true
+        })
+        return
+      }
+    }
+  }
+}

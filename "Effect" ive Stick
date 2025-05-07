@@ -1,0 +1,7 @@
+let effects = ["Damage", "Damage Reduction", "Speed", "Invisible", "Jump Boost", "Poisoned", "Slowness", "Weakness", "Health Regen", "Haste", "Heat Resistance"]
+
+onPlayerDamagingOtherPlayer = (attackerId, victimId) => {
+  if (api.getHeldItem(attackerId)?.name === "Stick") {
+    api.applyEffect(victimId, effects[Math.floor(Math.random() * effects.length)], 30000, { inbuiltLevel: 1 })
+  }
+}
